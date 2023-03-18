@@ -1,6 +1,9 @@
-﻿namespace IdentityApp.Web.Models
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+
+namespace IdentityApp.Web.Models
 {
-    public class AbpDbContext
+    public class AppDbContext : IdentityDbContext<AppUser,AppRole,string>
     {
+
     }
 }
