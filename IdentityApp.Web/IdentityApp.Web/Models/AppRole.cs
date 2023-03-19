@@ -1,6 +1,8 @@
-﻿namespace IdentityApp.Web.Models
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace IdentityApp.Web.Models
 {
-    public class AppRole
+    public class AppRole : IdentityRole
     {
     }
 }
