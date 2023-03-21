@@ -1,4 +1,5 @@
 ﻿using IdentityApp.Web.CustomValidations;
+using IdentityApp.Web.Localization;
 using IdentityApp.Web.Models;
 
 namespace IdentityApp.Web.Extensions
@@ -19,7 +20,8 @@ namespace IdentityApp.Web.Extensions
                 options.Password.RequireUppercase = false;
                 options.Password.RequireDigit = false;
 
-            }).AddUserValidator<UserValidator>()
+            }).AddErrorDescriber<LocalizationIdentityErrorDescriber>()
+            .AddUserValidator<UserValidator>()
             .AddPasswordValidator<PasswordValidator>()
             .AddEntityFrameworkStores<AppDbContext>();
 
