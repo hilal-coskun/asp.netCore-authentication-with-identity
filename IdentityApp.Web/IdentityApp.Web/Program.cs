@@ -13,7 +13,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 });
 
 builder.Services.AddIdentityWithExtension();
-
+ 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
