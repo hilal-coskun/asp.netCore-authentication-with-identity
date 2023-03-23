@@ -3,6 +3,7 @@ using IdentityApp.Web.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using IdentityApp.Web.Extensions;
 
 namespace IdentityApp.Web.Controllers
 {
@@ -10,12 +11,14 @@ namespace IdentityApp.Web.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
 
 
-        public HomeController(ILogger<HomeController> logger, UserManager<AppUser> userManager)
+        public HomeController(ILogger<HomeController> logger, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
         {
             _logger = logger;
             _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         public IActionResult Index()
@@ -31,6 +34,11 @@ namespace IdentityApp.Web.Controllers
         public IActionResult SignUp()
         {
 
+            return View();
+        }
+
+        public IActionResult SignIn()
+        {
             return View();
         }
 
@@ -50,14 +58,42 @@ namespace IdentityApp.Web.Controllers
                 return RedirectToAction(nameof(HomeController.SignUp));
             }
 
-            foreach (IdentityError item in identityResult.Errors)
-            {
-                ModelState.AddModelError(String.Empty, item.Description);
-            }
+            var errors = identityResult.Errors
+                .Select(x => x.Description)
+                .ToList();
+
+            ModelState.AddModelErrorList(errors);
 
             return View();
         }
 
+
+        [HttpPost]
+        public async Task<IActionResult> SignIn(SignInViewModel model, string? returnUrl = null)
+        {
+            returnUrl = returnUrl ?? Url.Action("Index", "Home");
+
+            var hasUser = await _userManager.FindByEmailAsync(model.Email);
+
+            if(hasUser == null)
+            {
+                ModelState.AddModelError(string.Empty, "Email veya şifre yanlış!");
+                return View();
+            }
+
+            var signInresult = await _signInManager.PasswordSignInAsync(hasUser, model.Password, model.RememberMe,false);
+
+            if (signInresult.Succeeded)
+            {
+                return Redirect(returnUrl);
+            }
+
+            ModelState.AddModelErrorList(new List<string>() { "Email veya şifre yanlış!" });
+                
+
+            return View();
+        }
+             
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
