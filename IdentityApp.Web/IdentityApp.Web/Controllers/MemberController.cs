@@ -1,9 +1,11 @@
 ﻿using IdentityApp.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityApp.Web.Controllers
 {
+    [Authorize]
     public class MemberController : Controller
     {
 
@@ -12,6 +14,11 @@ namespace IdentityApp.Web.Controllers
         public MemberController(SignInManager<AppUser> signInManager)
         {
             _signInManager = signInManager;
+        }
+
+        public IActionResult Index()
+        {
+            return View();
         }
 
         public async Task LogOut()
