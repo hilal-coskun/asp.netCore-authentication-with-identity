@@ -20,6 +20,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     cookieBuilder.Name = "AppCookie";
 
     options.LoginPath = new PathString("/Home/SignIn");
+    options.LogoutPath = new PathString("/Member/Logout");
     options.Cookie = cookieBuilder;
     options.ExpireTimeSpan = TimeSpan.FromDays(60);
     options.SlidingExpiration = true; //Kullanýcý ayný cookie ile 60 gün boyunca her giriþ yaptýðýnda ömrünü 600 gn uzatacak
