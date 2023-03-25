@@ -1,6 +1,10 @@
 using IdentityApp.Web.Extensions;
 using IdentityApp.Web.Models;
+using IdentityApp.Web.OptionsModel;
+using IdentityApp.Web.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +16,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SqlCon"));
 });
 
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+
 builder.Services.AddIdentityWithExtension();
+//AddScoped olmasýnýn sebebi her request te tekrar istek olsun diye
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 builder.Services.ConfigureApplicationCookie(options =>
 {

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using IdentityApp.Web.Extensions;
+using IdentityApp.Web.Services;
 
 namespace IdentityApp.Web.Controllers
 {
@@ -12,13 +13,14 @@ namespace IdentityApp.Web.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly IEmailService _emailService;
 
-
-        public HomeController(ILogger<HomeController> logger, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+        public HomeController(ILogger<HomeController> logger, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IEmailService emailService)
         {
             _logger = logger;
             _userManager = userManager;
             _signInManager = signInManager;
+            _emailService = emailService;
         }
 
         public IActionResult Index()
@@ -99,7 +101,41 @@ namespace IdentityApp.Web.Controllers
 
             return View();
         }
-             
+
+
+        public IActionResult ForgetPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ForgetPassword(ForgetPasswordViewModel request)
+        {
+            //example link = https://localhost:7007?userId=12213&token=aanskdfkdsfnksnfksnf
+
+            var hasUser = await _userManager.FindByEmailAsync(request.Email);
+
+            if (hasUser == null)
+            {
+                ModelState.AddModelError(string.Empty, "Email adresi ile kayıtlı kullanıcı bulunmamaktadır");
+                return View();
+            }
+
+            string passwordResetToken = await _userManager.GeneratePasswordResetTokenAsync(hasUser);
+
+            //Link üretimi
+            var passwordResetLink = Url.Action("ResetPassword", "Home", new { userId = hasUser.Id, Token = passwordResetToken }, HttpContext.Request.Scheme);
+
+            //Email Services
+            await _emailService.SendResetPasswordEmail(passwordResetLink, hasUser.Email);
+
+            TempData["SuccessMessage"] = "Şifre yenileme linki eposta adresinize gönderilmiştir!";
+            return RedirectToAction(nameof(ForgetPassword));
+
+        }
+
+
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

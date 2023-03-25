@@ -19,10 +19,20 @@
             <label for="Password" class="form-label" asp-for="Password">Password</label>
             <input type="password" class="form-control" asp-for="Password">
           </div>
-          <div class="mb-3 form-check">
-            <input class="form-check-input" asp-for="RememberMe">
-            <label class="form-check-label"asp-for="RememberMe">Beni Hatırla</label>
+
+          <div class="row">
+              <div class="col-md-6">
+                  <div class="mb-3 form-check">
+                    <input class="form-check-input" asp-for="RememberMe">
+                    <label class="form-check-label"asp-for="RememberMe"></label>
+                  </div>
+              </div>
+              <div class="col-md-6">
+                    <a class="btn btn-outline-secondary btn-sm float-end" asp-controller="Home" asp-action="ForgetPassword">Şifremi unuttum</a>
+              </div>
           </div>
+
+
           <button type="submit" class="btn btn-primary">Üye Giriş</button>
         </form>
     </div>
