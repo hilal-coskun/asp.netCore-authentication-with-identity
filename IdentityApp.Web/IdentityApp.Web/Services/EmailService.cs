@@ -17,7 +17,7 @@ namespace IdentityApp.Web.Services
         public async Task SendResetPasswordEmail(string resetEmailLink, string ToEmail)
         {
             var smptClient = new SmtpClient();
-            smptClient.Host = await _emailSettings.Host;
+            smptClient.Host =  _emailSettings.Host;
             smptClient.DeliveryMethod = SmtpDeliveryMethod.Network;
             smptClient.UseDefaultCredentials = false;
             smptClient.Port = 587;
