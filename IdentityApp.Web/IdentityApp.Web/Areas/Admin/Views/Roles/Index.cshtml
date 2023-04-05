@@ -16,11 +16,18 @@
 </div>
 <div class="row">
     <div class="col-md-8 offset-md-2">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-info" role="alert">
+                @TempData["SuccessMessage"]
+            </div>
+        }
         <table class="table table-striped">
             <thead>
                 <tr>
                     <th>Id</th>
                     <th>Rol Adı</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -29,6 +36,10 @@
                     <tr>
                         <td>@item.Id</td>
                         <td>@item.Name</td>
+                        <td>
+                            <a class="btn btn-dark btn-sm" asp-area="Admin" asp-controller="Roles" asp-action="RoleUpdate" asp-route-id="@item.Id">Güncelle</a>
+                             <a class="btn btn-dark btn-sm my-1" asp-area="Admin" asp-controller="Roles" asp-action="RoleDelete" asp-route-id="@item.Id">Sil</a>
+                        </td>
                     </tr>
                 }
             </tbody>
