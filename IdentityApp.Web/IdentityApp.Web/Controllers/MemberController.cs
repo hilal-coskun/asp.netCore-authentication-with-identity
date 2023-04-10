@@ -179,6 +179,13 @@ namespace IdentityApp.Web.Controllers
             return View();
         }
 
+        [Authorize(Policy = "ExchangePolicy")]
+        [HttpGet]
+        public IActionResult ExchangePage()
+        {
+            return View();
+        }
+
 
         public IActionResult AccessDenied(string returnUrl)
         {

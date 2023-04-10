@@ -2,8 +2,10 @@ using IdentityApp.Web.ClaimProviders;
 using IdentityApp.Web.Extensions;
 using IdentityApp.Web.Models;
 using IdentityApp.Web.OptionsModel;
+using IdentityApp.Web.Requirements;
 using IdentityApp.Web.Services;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,11 +35,20 @@ builder.Services.AddIdentityWithExtension();
 //AddScoped olmasýnýn sebebi her request te tekrar istek olsun diye
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IClaimsTransformation, UserClaimProvider>();
+builder.Services.AddScoped<IAuthorizationHandler, ExchangeExpireRequirementHandler>();
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("IstanbulPolicy", policy =>
     {
         policy.RequireClaim("city", "istanbul");
+    });
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("ExchangePolicy", policy =>
+    {
+        policy.AddRequirements(new ExchangeExpireRequirement());
     });
 });
 

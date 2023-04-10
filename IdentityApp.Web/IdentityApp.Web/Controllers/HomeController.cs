@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using IdentityApp.Web.Extensions;
 using IdentityApp.Web.Services;
+using System.Security.Claims;
 
 namespace IdentityApp.Web.Controllers
 {
@@ -54,19 +55,29 @@ namespace IdentityApp.Web.Controllers
 
             var identityResult = await _userManager.CreateAsync(new() { UserName = request.UserName, PhoneNumber = request.Phone, Email = request.Email }, request.Password);
 
-            if (identityResult.Succeeded)
+            if (!identityResult.Succeeded)
             {
-                TempData["SuccessMessage"] = "Üyelik kayıt işlemi başarıyla gerçekleşmiştir.";
-                return RedirectToAction(nameof(HomeController.SignUp));
+                ModelState.AddModelErrorList(identityResult.Errors.Select(x => x.Description).ToList());
+                return View();
             }
 
-            var errors = identityResult.Errors
-                .Select(x => x.Description)
-                .ToList();
+            
+            var exchangeExpireClaim = new Claim("ExchangeExpireDate", DateTime.Now.AddDays(10).ToString());
 
-            ModelState.AddModelErrorList(errors);
+            var user = await _userManager.FindByNameAsync(request.UserName);
 
-            return View();
+            var claimResult = await _userManager.AddClaimAsync(user, exchangeExpireClaim);
+
+            if (!claimResult.Succeeded)
+            {
+                ModelState.AddModelErrorList(claimResult.Errors.Select(x => x.Description).ToList());
+                return View();
+            }
+
+            TempData["SuccessMessage"] = "Üyelik kayıt işlemi başarıyla gerçekleşmiştir.";
+
+            return RedirectToAction(nameof(HomeController.SignUp));
+
         }
 
 
