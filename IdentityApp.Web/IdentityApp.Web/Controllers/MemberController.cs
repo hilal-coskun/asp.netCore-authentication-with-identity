@@ -158,5 +158,14 @@ namespace IdentityApp.Web.Controllers
 
             return View(userEditViewModel);
         }
+
+        public IActionResult AccessDenied(string returnUrl)
+        {
+            string message = string.Empty;
+            message = "Bu sayfayı görüntülemeye yetkiniz yoktur. Yetki almak için yöneticiniz ile görüşebilirsiniz";
+            ViewBag.message = message;
+
+            return View();
+        }
     }
 }

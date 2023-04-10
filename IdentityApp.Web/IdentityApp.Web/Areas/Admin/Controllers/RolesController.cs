@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace IdentityApp.Web.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "admin")]
     [Area("Admin")]
     public class RolesController : Controller
     {
@@ -32,13 +33,13 @@ namespace IdentityApp.Web.Areas.Admin.Controllers
             return View(roles);
         }
 
-        [Authorize(Roles ="admin,role-action")]
+        [Authorize(Roles ="role-action")]
         public IActionResult RoleCreate()
         {
             return View();
         }
 
-        [Authorize(Roles = "admin,role-action")]
+        [Authorize(Roles = "role-action")]
         [HttpPost]
         public async Task<IActionResult> RoleCreate(RoleCreateViewModel request)
         {
@@ -56,7 +57,7 @@ namespace IdentityApp.Web.Areas.Admin.Controllers
             return RedirectToAction(nameof(RolesController.Index));
         }
 
-        [Authorize(Roles = "admin,role-action")]
+        [Authorize(Roles = "role-action")]
         public async Task<IActionResult> RoleUpdate(string id)
         {
             var roleToUpdate = await _roleManager.FindByIdAsync(id);
@@ -75,7 +76,7 @@ namespace IdentityApp.Web.Areas.Admin.Controllers
             return View(newRole);
         }
 
-        [Authorize(Roles = "admin,role-action")]
+        [Authorize(Roles = "role-action")]
         [HttpPost]
         public async Task<IActionResult> RoleUpdate(RoleUpdateViewModel request)
         {
@@ -95,7 +96,7 @@ namespace IdentityApp.Web.Areas.Admin.Controllers
             return View();
         }
 
-        [Authorize(Roles = "admin,role-action")]
+        [Authorize(Roles = "role-action")]
         public async Task<IActionResult> RoleDelete(string Id)
         {
             var role = await _roleManager.FindByIdAsync(Id);
