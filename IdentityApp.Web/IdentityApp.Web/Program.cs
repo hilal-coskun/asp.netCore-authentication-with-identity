@@ -1,7 +1,9 @@
+using IdentityApp.Web.ClaimProviders;
 using IdentityApp.Web.Extensions;
 using IdentityApp.Web.Models;
 using IdentityApp.Web.OptionsModel;
 using IdentityApp.Web.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,6 +32,14 @@ builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Emai
 builder.Services.AddIdentityWithExtension();
 //AddScoped olmasýnýn sebebi her request te tekrar istek olsun diye
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IClaimsTransformation, UserClaimProvider>();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("IstanbulPolicy", policy =>
+    {
+        policy.RequireClaim("city", "istanbul");
+    });
+});
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -38,7 +48,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 
     options.LoginPath = new PathString("/Home/SignIn");
     options.LogoutPath = new PathString("/Member/Logout");
-    options.AccessDeniedPath = new PathString("Member/AccessDenied");
+    options.AccessDeniedPath = new PathString("/Member/AccessDenied");
     options.Cookie = cookieBuilder;
     options.ExpireTimeSpan = TimeSpan.FromDays(60);
     options.SlidingExpiration = true; //Kullanýcý ayný cookie ile 60 gün boyunca her giriþ yaptýðýnda ömrünü 600 gn uzatacak

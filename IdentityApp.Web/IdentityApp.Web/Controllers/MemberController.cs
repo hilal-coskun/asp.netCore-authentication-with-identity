@@ -159,6 +159,27 @@ namespace IdentityApp.Web.Controllers
             return View(userEditViewModel);
         }
 
+        [HttpGet]
+        public IActionResult Claims()
+        {
+            var userClaimList = User.Claims.Select(x => new ClaimViewModel()
+            {
+                Issuer = x.Issuer,
+                Type = x.Type,
+                Value = x.Value
+            }).ToList();
+
+            return View(userClaimList);
+        }
+
+        [Authorize(Policy = "IstanbulPolicy")]
+        [HttpGet]
+        public IActionResult IstanbulPage()
+        {
+            return View();
+        }
+
+
         public IActionResult AccessDenied(string returnUrl)
         {
             string message = string.Empty;
