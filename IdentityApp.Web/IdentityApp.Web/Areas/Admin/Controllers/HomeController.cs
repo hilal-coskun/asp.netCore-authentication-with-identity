@@ -1,5 +1,6 @@
-﻿using IdentityApp.Web.Areas.Admin.Models;
-using IdentityApp.Web.Models;
+﻿using IdentityApp.Repository.Models;
+using IdentityApp.Web.Areas.Admin.Models;
+using IdentityApp.Core.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

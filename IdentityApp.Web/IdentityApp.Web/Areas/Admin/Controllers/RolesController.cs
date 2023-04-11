@@ -1,10 +1,10 @@
 ﻿using IdentityApp.Web.Areas.Admin.Models;
-using IdentityApp.Web.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using IdentityApp.Web.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using IdentityApp.Repository.Models;
 
 namespace IdentityApp.Web.Areas.Admin.Controllers
 {

@@ -1,4 +1,4 @@
-﻿using IdentityApp.Web.Models;
+﻿using IdentityApp.Repository.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;

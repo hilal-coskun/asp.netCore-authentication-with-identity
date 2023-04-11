@@ -1,15 +1,15 @@
 using IdentityApp.Web.ClaimProviders;
 using IdentityApp.Web.Extensions;
-using IdentityApp.Web.Models;
-using IdentityApp.Web.OptionsModel;
+using IdentityApp.Core.OptionsModel;
 using IdentityApp.Web.Requirements;
-using IdentityApp.Web.Services;
+using IdentityApp.Service.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using IdentityApp.Repository.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +18,10 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("SqlCon"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("SqlCon"), options =>
+    {
+        options.MigrationsAssembly("IdentityApp.Repository");
+    });
 });
 
 //SecurityStamp Coumn
@@ -36,6 +39,7 @@ builder.Services.AddIdentityWithExtension();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IClaimsTransformation, UserClaimProvider>();
 builder.Services.AddScoped<IAuthorizationHandler, ExchangeExpireRequirementHandler>();
+builder.Services.AddScoped<IMemberService, MemberService>();
 builder.Services.AddScoped<IAuthorizationHandler, ViolenceRequirementHandler>();
 builder.Services.AddAuthorization(options =>
 {

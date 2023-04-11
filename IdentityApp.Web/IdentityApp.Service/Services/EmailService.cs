@@ -1,9 +1,10 @@
 ﻿using IdentityApp.Core.OptionsModel;
+using IdentityApp.Service.Services;
 using Microsoft.Extensions.Options;
 using System.Net;
 using System.Net.Mail;
 
-namespace IdentityApp.Web.Services
+namespace IdentityApp.Service.Services
 {
     public class EmailService : IEmailService
     {

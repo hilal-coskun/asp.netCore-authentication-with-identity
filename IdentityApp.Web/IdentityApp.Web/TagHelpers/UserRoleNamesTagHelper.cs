@@ -1,4 +1,4 @@
-﻿using IdentityApp.Web.Models;
+﻿using IdentityApp.Repository.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using System.Text;

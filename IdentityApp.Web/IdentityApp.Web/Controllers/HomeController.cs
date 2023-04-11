@@ -1,11 +1,11 @@
-﻿using IdentityApp.Web.Models;
-using IdentityApp.Web.ViewModels;
+﻿using IdentityApp.Core.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using IdentityApp.Web.Extensions;
-using IdentityApp.Web.Services;
+using IdentityApp.Service.Services;
 using System.Security.Claims;
+using IdentityApp.Repository.Models;
 
 namespace IdentityApp.Web.Controllers
 {
