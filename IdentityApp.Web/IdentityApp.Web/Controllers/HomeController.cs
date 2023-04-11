@@ -96,21 +96,28 @@ namespace IdentityApp.Web.Controllers
 
             var signInresult = await _signInManager.PasswordSignInAsync(hasUser, model.Password, model.RememberMe,true);
 
-            if (signInresult.Succeeded)
-            {
-                return Redirect(returnUrl);
-            }
-
             if (signInresult.IsLockedOut)
             {
                 ModelState.AddModelErrorList(new List<string>() { "3 dakika boyunca giriş yapamazsınız!" });
                 return View();
             }
-            
-            ModelState.AddModelErrorList(new List<string>() { $"Email veya şifre yanlış (Başarısız giriş sayısı = {await _userManager.GetAccessFailedCountAsync(hasUser)})" });
-                
 
-            return View();
+            if (!signInresult.Succeeded)
+            {
+                ModelState.AddModelErrorList(new List<string>() { $"Email veya şifre yanlış (Başarısız giriş sayısı = {await _userManager.GetAccessFailedCountAsync(hasUser)})" });
+                return View();
+
+            }
+
+            if (hasUser.BirthDate.HasValue)
+            {
+                await _signInManager.SignInWithClaimsAsync(hasUser, model.RememberMe, new[]
+                {
+                    new Claim("birthdate", hasUser.BirthDate.Value.ToString())
+                });
+            }
+
+            return Redirect(returnUrl!);
         }
 
 

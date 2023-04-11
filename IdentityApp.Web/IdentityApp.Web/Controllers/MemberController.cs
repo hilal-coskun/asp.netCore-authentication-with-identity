@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.FileProviders;
+using System.Security.Claims;
 
 namespace IdentityApp.Web.Controllers
 {
@@ -142,7 +143,19 @@ namespace IdentityApp.Web.Controllers
 
             await _userManager.UpdateSecurityStampAsync(currentUser);
             await _signInManager.SignOutAsync();
-            await _signInManager.SignInAsync(currentUser,true);
+
+            if (request.BirthDate.HasValue)
+            {
+                await _signInManager.SignInWithClaimsAsync(currentUser, true, new[]
+                {
+                    new Claim("birthdate", currentUser.BirthDate!.Value.ToString())
+                });
+            }
+            else
+            {
+                await _signInManager.SignInAsync(currentUser, true);
+            }
+            
 
             TempData["SuccessMessage"] = "Kullanıcı  bilgileri başarıyla değiştirilmiştir!";
 
@@ -179,9 +192,18 @@ namespace IdentityApp.Web.Controllers
             return View();
         }
 
+
         [Authorize(Policy = "ExchangePolicy")]
         [HttpGet]
         public IActionResult ExchangePage()
+        {
+            return View();
+        }
+
+
+        [Authorize(Policy = "ViolencePolicy")]
+        [HttpGet]
+        public IActionResult ViolencePage()
         {
             return View();
         }
